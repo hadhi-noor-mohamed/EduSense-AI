@@ -1,0 +1,226 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg: 248 250 252;
+    --bg-elevated: 255 255 255;
+    --panel: 255 255 255;
+    --panel-muted: 241 245 249;
+    --text: 15 23 42;
+    --text-muted: 71 85 105;
+    --text-subtle: 100 116 139;
+    --text-faint: 148 163 184;
+    --border: 226 232 240;
+    --border-soft: 238 242 247;
+    --accent: 79 70 229;
+    --accent-soft: 99 102 241;
+    --chart-grid: 226 232 240;
+    --ring: 129 140 248;
+  }
+
+  .dark {
+    --bg: 9 12 21;
+    --bg-elevated: 18 23 37;
+    --panel: 18 23 37;
+    --panel-muted: 26 32 50;
+    --text: 226 232 240;
+    --text-muted: 148 163 184;
+    --text-subtle: 120 136 160;
+    --text-faint: 100 116 139;
+    --border: 39 48 70;
+    --border-soft: 31 39 58;
+    --accent: 129 140 248;
+    --accent-soft: 165 180 252;
+    --chart-grid: 39 48 70;
+    --ring: 129 140 248;
+  }
+
+  * {
+    border-color: rgb(var(--border));
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply font-sans antialiased;
+    background-color: rgb(var(--bg));
+    color: rgb(var(--text));
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: rgb(var(--accent) / 0.22);
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--ring));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Scrollbars */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--text-subtle) / 0.32);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--text-subtle) / 0.55);
+    background-clip: content-box;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply rounded-2xl border bg-white shadow-card dark:bg-[rgb(var(--bg-elevated))];
+    border-color: rgb(var(--border));
+  }
+
+  .panel-muted {
+    @apply rounded-2xl border;
+    background-color: rgb(var(--panel-muted));
+    border-color: rgb(var(--border-soft));
+  }
+
+  .text-muted {
+    color: rgb(var(--text-muted));
+  }
+  .text-subtle {
+    color: rgb(var(--text-subtle));
+  }
+
+  .btn-ghost-soft {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors;
+    color: rgb(var(--text-muted));
+  }
+  .btn-ghost-soft:hover {
+    background-color: rgb(var(--panel-muted));
+    color: rgb(var(--text));
+  }
+
+  .skeleton {
+    @apply relative overflow-hidden rounded-lg;
+    background-color: rgb(var(--panel-muted));
+  }
+  .skeleton::after {
+    content: '';
+    @apply absolute inset-0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgb(var(--text-subtle) / 0.12),
+      transparent
+    );
+    animation: shimmer 1.6s infinite;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .animate-delay-75 {
+    animation-delay: 75ms;
+  }
+  .animate-delay-150 {
+    animation-delay: 150ms;
+  }
+  .animate-delay-225 {
+    animation-delay: 225ms;
+  }
+  .animate-delay-300 {
+    animation-delay: 300ms;
+  }
+  .animate-delay-400 {
+    animation-delay: 400ms;
+  }
+}
+
+/* Recharts dark-mode tuning */
+.dark .recharts-cartesian-axis-tick text {
+  fill: rgb(var(--text-subtle));
+}
+.recharts-default-legend {
+  font-size: 12px;
+}
+
+/* ---------------------------------------------------------------------------
+   Print styles — used by the shared ReportView.
+   Chrome (sidebar / header / bottom nav / toasts) is hidden and the generated
+   report is rendered full-bleed.
+--------------------------------------------------------------------------- */
+@media print {
+  @page {
+    margin: 14mm;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #0f172a !important;
+  }
+
+  aside,
+  header,
+  nav,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Undo the app shell's sidebar padding so the report uses the full width */
+  main,
+  [class*='lg:pl-'] {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .print-area {
+    border: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    background: #fff !important;
+  }
+
+  .print-area * {
+    color: #0f172a !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit !important;
+  }
+
+  /* Keep chart canvases/SVGs visible but flattened */
+  .recharts-wrapper,
+  svg {
+    break-inside: avoid;
+  }
+}
+
